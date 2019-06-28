@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/todo-app/static/css/main.141a92e3.chunk.css",
-    "main.js": "/todo-app/static/js/main.664708ff.chunk.js",
-    "main.js.map": "/todo-app/static/js/main.664708ff.chunk.js.map",
-    "runtime~main.js": "/todo-app/static/js/runtime~main.eca9ff85.js",
-    "runtime~main.js.map": "/todo-app/static/js/runtime~main.eca9ff85.js.map",
-    "static/js/2.d695827b.chunk.js": "/todo-app/static/js/2.d695827b.chunk.js",
-    "static/js/2.d695827b.chunk.js.map": "/todo-app/static/js/2.d695827b.chunk.js.map",
-    "index.html": "/todo-app/index.html",
-    "precache-manifest.054582f3423e96a5a2f6d75ffded291e.js": "/todo-app/precache-manifest.054582f3423e96a5a2f6d75ffded291e.js",
-    "service-worker.js": "/todo-app/service-worker.js",
-    "static/css/main.141a92e3.chunk.css.map": "/todo-app/static/css/main.141a92e3.chunk.css.map"
+    "main.css": "/dynamic-list-of-posts/static/css/main.141a92e3.chunk.css",
+    "main.js": "/dynamic-list-of-posts/static/js/main.9e3517af.chunk.js",
+    "main.js.map": "/dynamic-list-of-posts/static/js/main.9e3517af.chunk.js.map",
+    "runtime~main.js": "/dynamic-list-of-posts/static/js/runtime~main.da5f0574.js",
+    "runtime~main.js.map": "/dynamic-list-of-posts/static/js/runtime~main.da5f0574.js.map",
+    "static/js/2.d695827b.chunk.js": "/dynamic-list-of-posts/static/js/2.d695827b.chunk.js",
+    "static/js/2.d695827b.chunk.js.map": "/dynamic-list-of-posts/static/js/2.d695827b.chunk.js.map",
+    "index.html": "/dynamic-list-of-posts/index.html",
+    "precache-manifest.2b3561ac1c4c675edc738e5ccc3eeed2.js": "/dynamic-list-of-posts/precache-manifest.2b3561ac1c4c675edc738e5ccc3eeed2.js",
+    "service-worker.js": "/dynamic-list-of-posts/service-worker.js",
+    "static/css/main.141a92e3.chunk.css.map": "/dynamic-list-of-posts/static/css/main.141a92e3.chunk.css.map"
   }
 }
