@@ -1,6 +1,6 @@
 {
   "name": "dynamic-list-of-posts",
-  "homepage": "https://drew11.github.io/todo-app",
+  "homepage": "https://drew11.github.io/dynamic-list-of-posts",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
