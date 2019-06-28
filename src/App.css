@@ -1,3 +1,20 @@
+
+.App-header {
+    display: flex;
+    justify-content: center;
+}
+
+.App-nav {
+    display: flex;
+    justify-content: center;
+}
+.btn-load{
+    width: 100px;
+    height: 40px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
 ul {
     list-style: none;
 }

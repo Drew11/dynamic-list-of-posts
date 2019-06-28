@@ -54,22 +54,23 @@ class App extends Component{
       return (
           <div className="App">
               <header className="App-header">
+                  <h1>Dynamic List Of Posts</h1>
               </header>
-              <h1>Dynamic List Of Posts</h1>
 
-              <select  onChange={(event)=>this.sort(event)}>
-                  <option value="id">Sorted By Id</option>
-                  <option value="title">Sorted By Text</option>
-              </select>
+             <div className={"App-nav"}>
+                 {!this.state.completeLoad?<button
+                         className={"btn-load"}
+                         onClick={()=>{
+                             this.setState({ isLoading: true });
+                             this.getData()}}
+                     >{!this.state.isLoading?"Load": "Loading..."}</button>:
+                     <select  onChange={(event)=>this.sort(event)}>
+                         <option value="id">Sorted By Id</option>
+                         <option value="title">Sorted By Text</option>
+                     </select>
+                 }
+             </div>
 
-              {!this.state.completeLoad?<button
-                  className={"todos__btn-load"}
-                  onClick={()=>{
-                      this.setState({ isLoading: true });
-                      this.getData()}}
-              >{!this.state.isLoading?"Load": "Loading..."}</button>:
-               null
-              }
               <main>
                   <PostList
                   posts={this.state.posts}
