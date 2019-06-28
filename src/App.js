@@ -12,7 +12,7 @@ class App extends Component{
       users:[],
       comments:[],
       isLoading: false,
-      completeLoad: false
+      completeLoad: false,
     };
   }
 
@@ -24,6 +24,8 @@ class App extends Component{
         getComments(),
     ]);
 
+      this.setState({isLoading: true});
+
       setTimeout(()=>{
           this.setState({
               posts: posts,
@@ -34,23 +36,51 @@ class App extends Component{
       },2000)
   };
 
-  sort =(order)=>{
+  sort =(event)=> {
       const posts = [...this.state.posts];
+      const users = this.state.users;
+      let updatePosts;
 
-      if(order.target.value==='title'){
-          posts.sort(function(a, b) {
-              return a['title'].localeCompare(b['title']);
-          })
+      switch (event.target.value){
+                case 'name':
+                    updatePosts = posts.map((post)=> {
+                                 const user = users.find((user)=>user["id"]===post['userId']),
+                                       copyPost = {...post};
+                                 copyPost['userName']= user['name'];
+                                 return copyPost;
+                                  })
+                                  .sort(function (a, b) {
+                                    return  a['userName'].localeCompare(b['userName'])
+                                  });
+                    break;
+
+                case 'id': updatePosts = posts.sort((a, b)=>a['id']-b['id']);
+                    break;
+
+                case 'title': updatePosts = posts.sort((a, b)=>a['title'].localeCompare(b['title']));
+                    break;
+
+                default:
+                    return;
       }
-      if(order.target.value==='id'){
-          posts.sort(function(a, b) {
-              return a['id'] - b['id'];
-          })
-      }
-      this.setState({posts: posts});
+
+      this.setState({posts:  updatePosts})
   };
 
+   filter =  async(event)=> {
+        let searchText = event.target.value.toLowerCase(),
+           filteredPosts;
+        const posts = [...await getPosts()];
+        if(event){
+            filteredPosts = posts.filter(post => post['title'].toLowerCase().includes(searchText));
+        }else {
+            filteredPosts = posts;
+        }
+        this.setState({posts: filteredPosts});
+    };
+
   render(){
+
       return (
           <div className="App">
               <header className="App-header">
@@ -60,14 +90,22 @@ class App extends Component{
              <div className={"App-nav"}>
                  {!this.state.completeLoad?<button
                          className={"btn-load"}
-                         onClick={()=>{
-                             this.setState({ isLoading: true });
-                             this.getData()}}
+                         onClick={this.getData}
                      >{!this.state.isLoading?"Load": "Loading..."}</button>:
-                     <select  onChange={(event)=>this.sort(event)}>
+                     <>
+                     <select  onChange={(event)=>{this.sort(event)}}>
+
                          <option value="id">Sorted By Id</option>
+                         <option value="name">Sorted By User Name</option>
                          <option value="title">Sorted By Text</option>
+
                      </select>
+
+                     <input className={"search"}
+                            type={"text"}
+                            onChange={(event)=>this.filter(event)}
+                     />
+                     </>
                  }
              </div>
 

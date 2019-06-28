@@ -5,6 +5,7 @@ import CommentList from './CommentList';
 
 function PostList({posts, users, comments }) {
 
+
     return <ul className={"post__list"}>
         {posts.map(post=>{
         return<>
