@@ -2,7 +2,7 @@ import React from 'react';
 
 function User({id, users}){
         const user = users.find(user=>user['id']=== id);
-        return <>
+        return <div className={"post-info"}>
                 <li>{user['name']}</li>
                 <li>{user['email']}</li>
                 <li>{user['address']["street"]+ " " +
@@ -10,6 +10,6 @@ function User({id, users}){
                 user['address']["city"]+ " " +
                 user['address']["zipcode"]
                 }</li>
-              </>
+              </div>
 }
 export default User;
