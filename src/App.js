@@ -3,25 +3,21 @@ import PostList from './components/PostList';
 import { getPosts, getUsers, getComments } from './utils/helper';
 import './App.css';
 
-
 function sortByName(posts, users) {
-   return  posts.map((post)=> {
-        const user = users.find((user)=>user["id"]===post['userId']),
+   return posts.map((post)=> {
+            const user = users.find((user)=>user["id"]===post['userId']),
             copyPost = {...post};
-        copyPost['userName']= user['name'];
-        return copyPost;
-    }).sort(function (a, b) {
-            return  a['userName'].localeCompare(b['userName'])
-     });
-}
-
-function sortById(posts) {
-    console.log(posts);
-    return posts.sort((a, b)=>a['id']-b['id']);
+            copyPost['userName'] = user['name'];
+            return copyPost;})
+           .sort((a, b)=>a['userName'].localeCompare(b['userName']));
 }
 
 function sortByTitle(posts) {
-    return posts.sort((a, b)=>a['title'].localeCompare(b['title']));
+    return posts.sort( (a, b) => a['title'].localeCompare(b['title']) );
+}
+
+function sortById(posts) {
+    return posts.sort((a, b) => a['id']-b['id']);
 }
 
 class App extends Component{
@@ -32,11 +28,11 @@ class App extends Component{
       posts:[],
       users:[],
       comments:[],
+      sortedPosts:[],
       isLoading: false,
       completeLoad: false,
     };
   }
-
 
   getData = async ()=>{
     const [posts, users, comments] = await Promise.all([
@@ -58,26 +54,20 @@ class App extends Component{
   };
 
   sort =(event)=> {
-      const posts = [...this.state.posts],
-            users = this.state.users,
-            sortItemsMap = {
-          'name': sortByName(posts, users),
-          'id': sortById(posts),
-          'title': sortByTitle(posts)
-         };
+      const sortItemsMap = {
+          'id': sortById( [...this.state.posts]),
+          'name': sortByName( [...this.state.posts], [...this.state.users]),
+          'title': sortByTitle( [...this.state.posts])
+       };
 
-      this.setState({posts:  sortItemsMap[event.target.value]})
+      this.setState({posts:  sortItemsMap[event.target.value],
+                     sortedPosts: sortItemsMap[event.target.value],
+      })
   };
 
    filter =  async(event)=> {
-        let searchText = event.target.value.toLowerCase(),
-           filteredPosts;
-        const posts = await getPosts();
-        if(event) {
-            filteredPosts = posts.filter(post => post['title'].toLowerCase().includes(searchText));
-        } else {
-            filteredPosts = posts;
-        }
+        let searchText = event.target.value.toLowerCase();
+        const filteredPosts = this.state.sortedPosts.filter(post => post['title'].toLowerCase().includes(searchText));
         this.setState({posts: filteredPosts});
     };
 
@@ -88,19 +78,20 @@ class App extends Component{
                   <h1>Dynamic List Of Posts</h1>
               </header>
              <div className={"App-nav"}>
-                 {!this.state.completeLoad?<button
+                 {!this.state.completeLoad ? <button
                          className={"btn-load"}
                          onClick={this.getData}
-                     >{!this.state.isLoading? "Load": "Loading..."}</button>:
+                     >{!this.state.isLoading? "Load": "Loading..."}
+                     </button> :
                      <>
-                     <select  onChange={(event)=>{this.sort(event)}}>
+                     <select  onChange={this.sort}>
                          <option value="id">Sorted By Id</option>
                          <option value="name">Sorted By User Name</option>
                          <option value="title">Sorted By Text</option>
                      </select>
                      <input className={"search"}
                             type={"text"}
-                            onChange={(event)=>this.filter(event)}
+                            onChange={this.filter}
                      />
                      </>
                  }
