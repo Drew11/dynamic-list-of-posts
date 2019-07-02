@@ -1,10 +1,12 @@
 import React from 'react';
 import Comment from './Comment';
 
-function CommentList({id, comments}) {
+function CommentList({postId, comments}) {
+
+    const comment =  comments.filter((comment)=>comment['postId'] === postId);
 
     return <ul className={"post__comments"}>
-        {<Comment id={id} comments={comments}/>}
-        </ul>
+             {comment.map((comment)=> <Comment comment={comment}/>)}
+           </ul>
 }
 export default CommentList;
