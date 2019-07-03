@@ -5,10 +5,12 @@ function User({id, users}){
         return <div className={"post-info"}>
                 <li>{`author: ${user['name']}`}</li>
                 <li>{`email: ${user['email']}`}</li>
-                <li>{`address: ${user['address']["street"]}`}
-                             {`${user['address']["suite" ]} `}
-                             {`${user['address']["city"]} `}
-                             {`${user['address']["zipcode"]} `}
+                <li>{`
+                      address: ${user['address']["street"]}
+                      ${user['address']["suite" ]}
+                      ${user['address']["city"]}
+                      ${user['address']["zipcode"]}
+                     `}
                 </li>
               </div>
 }
