@@ -3,21 +3,16 @@ import PostList from "./components/PostList";
 import { getPosts, getUsers, getComments } from "./utils/helper";
 import "./App.css";
 
-function sortByName(posts, users) {
-  return posts.map((post) => {
-    const user = users.find((user) => user["id"] === post["userId"]),
-      copyPost = { ...post };
-    copyPost["userName"] = user["name"];
-    return copyPost;
-  }).sort((a, b) => a["userName"].localeCompare(b["userName"]));
+function sortByName() {
+  return (a, b) => a["userName"].localeCompare(b["userName"]);
 }
 
-function sortByTitle(posts) {
-  return posts.sort((a, b) => a["title"].localeCompare(b["title"]));
+function sortByTitle() {
+  return (a, b) => a["title"].localeCompare(b["title"]);
 }
 
-function sortById(posts) {
-  return posts.sort((a, b) => a["id"] - b["id"]);
+function sortById() {
+  return (a, b) => a["id"] - b["id"];
 }
 
 class App extends Component {
@@ -28,7 +23,10 @@ class App extends Component {
       posts: [],
       users: [],
       comments: [],
-      visiblePosts: [],
+      sortedPosts: [],
+      filteredPosts: [],
+      sort: false,
+      filter:false,
       isLoading: false,
       completeLoad: false
     };
@@ -49,29 +47,56 @@ class App extends Component {
         users: users,
         comments: comments,
         completeLoad: true,
-        visiblePosts: [...posts]
       });
     }, 1000);
   };
 
   sort = (event) => {
-    const sortItemsMap = {
-      "id": sortById([...this.state.visiblePosts]),
-      "name": sortByName([...this.state.visiblePosts], [...this.state.users]),
-      "title": sortByTitle([...this.state.visiblePosts])
-    };
+    const {posts, users} = this.state;
+    const updatePosts = posts.map((post) => {
+         const user = users.find((user) => user["id"] === post["userId"]),
+         copyPost = { ...post };
+         copyPost["userName"] = user["name"];
+         return copyPost;
+       });
 
-    this.setState({ visiblePosts: sortItemsMap[event.target.value] });
+    const sortItemsMap = {
+      "id": sortById(),
+      "name": sortByName(),
+      "title": sortByTitle()
+    };
+    const sortedPosts = updatePosts.sort(sortItemsMap[event.target.value]);
+
+    this.setState({ sortedPosts: sortedPosts,
+                    sort:true,
+                    filter:false,
+    });
   };
 
   filter = (event) => {
-
-    let searchText = event.target.value.toLowerCase();
-    const filteredPosts = this.state.posts.filter(post => post["title"].toLowerCase().includes(searchText));
-    this.setState({ visiblePosts: filteredPosts });
+    const searchText = event.target.value.toLowerCase();
+    const filteredPosts = this.state.sortedPosts.filter(post =>
+      post["title"].toLowerCase().includes(searchText));
+    this.setState({
+      filteredPosts: filteredPosts,
+      sort:false,
+      filter:true,
+    });
   };
 
   render() {
+    let visiblePosts;
+    const {sortedPosts, filteredPosts, posts , sort, filter} = this.state;
+
+    visiblePosts = posts;
+
+    if(sort){
+       visiblePosts = sortedPosts;
+    }
+    if (filter){
+       visiblePosts = filteredPosts;
+    }
+
     return (
       <div className="App">
         <header className="App-header">
@@ -98,7 +123,7 @@ class App extends Component {
         </div>
         <main>
           <PostList
-            posts={this.state.visiblePosts}
+            posts={visiblePosts}
             users={this.state.users}
             comments={this.state.comments}
           />
