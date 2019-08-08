@@ -1,33 +1,17 @@
 import React, { Component } from "react";
 import PostList from "./components/PostList";
 import { getPosts, getUsers, getComments } from "./utils/helper";
-import "./App.css";
-
-function sortByName() {
-  return (a, b) => a["userName"].localeCompare(b["userName"]);
-}
-
-function sortByTitle() {
-  return (a, b) => a["title"].localeCompare(b["title"]);
-}
-
-function sortById() {
-  return (a, b) => a["id"] - b["id"];
-}
+import "./App.scss";
 
 class App extends Component {
 
   constructor() {
     super();
     this.state = {
+      query: '',
+      sortField: '',
       posts: [],
-      users: [],
-      comments: [],
-      sortedPosts: [],
-      filteredPosts: [],
-      sort: false,
-      filter:false,
-      isLoading: false,
+      visiblePosts: [],
       completeLoad: false
     };
   }
@@ -39,63 +23,51 @@ class App extends Component {
       getComments()
     ]);
 
-    this.setState({ isLoading: true });
+    const updatePosts = posts.map(post => ({
+      ...post,
+      user: users.find((user) => user["id"] === post["userId"]),
+      commentsPost: comments.filter(commentsPost=>commentsPost['postId']===post['id'])
+    }));
 
-    setTimeout(() => {
-      this.setState({
-        posts: posts,
-        users: users,
-        comments: comments,
-        completeLoad: true,
-      });
-    }, 1000);
+    this.setState(prevState=>({
+      ...prevState,
+      posts: updatePosts,
+      visiblePosts: updatePosts,
+      completeLoad: !prevState.completeLoad,
+      }));
+
   };
 
-  sort = (event) => {
-    const {posts, users} = this.state;
-    const updatePosts = posts.map((post) => {
-         const user = users.find((user) => user["id"] === post["userId"]),
-         copyPost = { ...post };
-         copyPost["userName"] = user["name"];
-         return copyPost;
-       });
+  preparePosts = () => {
+     const { posts,  sortField, query} = this.state;
+     const searchText = query.toLowerCase();
 
-    const sortItemsMap = {
-      "id": sortById(),
-      "name": sortByName(),
-      "title": sortByTitle()
-    };
-    const sortedPosts = updatePosts.sort(sortItemsMap[event.target.value]);
+     const filteredPosts = posts.filter(post =>
+       post["title"].toLowerCase().includes(searchText));
 
-    this.setState({ sortedPosts: sortedPosts,
-                    sort:true,
-                    filter:false,
-    });
+     const callbackMap = {
+       'id': (a, b) => (a.id - b.id),
+       'title': (a, b) => a.title.localeCompare(b.title),
+       'user': (a, b) => a.user.name.localeCompare(b.user.name),
+     };
+     return { visiblePosts: [...filteredPosts].sort(callbackMap[sortField]) }
+  };
+
+  sort = (event)=>{
+    this.setState(
+      {sortField: event.target.value,} ,
+      ()=>this.setState(this.preparePosts)
+      );
+
   };
 
   filter = (event) => {
-    const searchText = event.target.value.toLowerCase();
-    const filteredPosts = this.state.sortedPosts.filter(post =>
-      post["title"].toLowerCase().includes(searchText));
-    this.setState({
-      filteredPosts: filteredPosts,
-      sort:false,
-      filter:true,
-    });
+    this.setState({query: event.target.value },
+      ()=>this.setState(this.preparePosts)
+    );
   };
 
   render() {
-    let visiblePosts;
-    const {sortedPosts, filteredPosts, posts , sort, filter} = this.state;
-
-    visiblePosts = posts;
-
-    if(sort){
-       visiblePosts = sortedPosts;
-    }
-    if (filter){
-       visiblePosts = filteredPosts;
-    }
 
     return (
       <div className="App">
@@ -111,9 +83,10 @@ class App extends Component {
             <>
               <select onChange={this.sort}>
                 <option value="id">Sorted By Id</option>
-                <option value="name">Sorted By User Name</option>
                 <option value="title">Sorted By Text</option>
+                <option value="user">Sorted By User Name</option>
               </select>
+
               <input className={"search"}
                      type={"text"}
                      onChange={this.filter}
@@ -123,9 +96,7 @@ class App extends Component {
         </div>
         <main>
           <PostList
-            posts={visiblePosts}
-            users={this.state.users}
-            comments={this.state.comments}
+            posts={this.state.visiblePosts}
           />
         </main>
       </div>

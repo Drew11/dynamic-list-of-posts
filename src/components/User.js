@@ -1,8 +1,8 @@
 import React from 'react';
 
-function User({id, users}){
-        const user = users.find(user=>user['id']=== id);
-        return <div className={"post-info"}>
+function User({user}){
+
+        return <ul className={"post-info"}>
                 <li>{`author: ${user['name']}`}</li>
                 <li>{`email: ${user['email']}`}</li>
                 <li>{`
@@ -12,6 +12,6 @@ function User({id, users}){
                       ${user['address']["zipcode"]}
                      `}
                 </li>
-              </div>
+              </ul>
 }
 export default User;

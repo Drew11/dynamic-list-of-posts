@@ -1,15 +1,20 @@
 import React from 'react';
 import Post from './Post';
 
-function PostList({posts, users, comments }) {
+function PostList({posts}) {
     return <ul className={"post__list"}>
-             {posts.map((post, index)=><Post
-                                index={index}
-                                users={users}
-                                post={post}
-                                comments={comments}
-                              />
-             )}
+             {posts.map((post, index)=>{
+             const user = post.user;
+             const comments = post.commentsPost;
+
+              return  <Post
+                 key={index}
+                 user={user}
+                 post={post}
+                 comments={comments}
+               />}
+             )
+             }
            </ul>
 }
 

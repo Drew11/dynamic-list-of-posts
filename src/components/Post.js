@@ -2,12 +2,12 @@ import React from 'react';
 import User from './User';
 import CommentList from './CommentList';
 
-function Post({post , users , comments , index}) {
+function Post({post, user , comments , index}) {
 
     return <li key={index}> {post["id"]+": "+post["title"]}
-            <User id={post['userId']} users={users} />
             <span className={"post__comments-readmore"}>{"comments..."}</span>
-            <CommentList postId={post['id'] } comments={comments}/>
-         </li>
+            <CommentList comments = {comments}/>
+            <User user={user} />
+          </li>
 }
 export default Post;
